@@ -1,4 +1,15 @@
-import pygame, pygame.mixer
+android = False
+
+try:
+    import pygame_sdl2
+    pygame_sdl2.import_as_pygame()
+    android = True
+except ImportError:
+    pass
+
+import pygame
+if not android:
+    import pygame.mixer
 import random
 import time
 
@@ -21,8 +32,9 @@ def resource_path(relative):
 	return os.path.join(relative)
 	
 pygame.init()
-window = pygame.display.set_mode((800,600),pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)
-screen = pygame.Surface((800,600))
+#window = pygame.display.set_mode((800,600),pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)
+screen = pygame.display.set_mode((800,600))
+#screen = pygame.Surface((800,600))
 pygame.display.set_caption("FOOL");
 
 cardfile = []
@@ -54,7 +66,8 @@ c = 0
 	
 a = []
 aa = []
-	
+
+
 for hhh in range (0,34):
 	xc1 += 2
 	xcol.append(xc1)
@@ -345,6 +358,9 @@ while done == False:
 			done = True
 		if u.type == pygame.KEYUP and u.key == pygame.K_ESCAPE:
 			done = True
+		# Android back key.
+		elif u.type == pygame.KEYDOWN and u.key == pygame.K_AC_BACK:
+			done = True
 		"""
 		if u.type == pygame.KEYUP and u.key == pygame.K_TAB:
 
@@ -382,7 +398,7 @@ while done == False:
 			voz = 0
 		
 		if u.type == pygame.MOUSEBUTTONDOWN:
-		
+			x,y = u.pos
 			if inter (x,y,88,17,1,88,15):
 				voic = False
 				while voic == False:
@@ -390,18 +406,19 @@ while done == False:
 						if pp.type == pygame.MOUSEBUTTONUP:
 							x,y = pp.pos
 							if inter (x,y,286,240,10,222,50):
-								musica = 0
+								if not android:  # don't play music on android
+									musica = 0
 								voic = True
 							if inter (x,y,286,283,10,222,50):
 								musica = 1
 								voic = True
-						if pp.type == pygame.MOUSEMOTION:
+						if pp.type == pygame.MOUSEMOTION and not android:
 							x,y = pp.pos
 							if inter (x,y,286,240,10,222,50):
 								screen.blit(on, (285,191))
 							if inter (x,y,286,283,10,222,50):
 								screen.blit(off, (285,280))
-						window.blit(screen, (0,0))
+#						window.blit(screen, (0,0))
 						screen.blit(voicep, (0,0))
 						pygame.display.update()
 						
@@ -414,7 +431,7 @@ while done == False:
 							x,y = ppp.pos
 						if inter (x,y,522,504,1,228,63):
 							info = True
-						window.blit(screen, (0,0))
+#						window.blit(screen, (0,0))
 						screen.blit(info1, (0,0))
 						pygame.display.update()
 						
@@ -442,11 +459,12 @@ while done == False:
 								gamee = True
 								done = True
 								new = 1
-						window.blit(screen, (0,0))
+#						window.blit(screen, (0,0))
 						screen.blit(menuu, (0,0))
 						pygame.display.update()
 			
 		if u.type == pygame.MOUSEBUTTONUP:
+			x,y = u.pos
 			if inter (x,y,610,200,1,105,20):
 				if hod == 1:
 					if odin == 0:
@@ -644,7 +662,7 @@ while done == False:
 			screen.blit(take1, (610,200))
 		
 			
-	if u.type == pygame.MOUSEMOTION:
+	if u.type == pygame.MOUSEMOTION and not android:
 		x,y = u.pos
 		if inter (x,y,0,17,1,88,15):
 			screen.blit(game, (0,17))
@@ -1205,7 +1223,7 @@ while done == False:
 					
 		if loser == 0 and win == 0:
 			screen.blit (nothing, (0,0))
-			window.blit(screen, (0,0))
+#			window.blit(screen, (0,0))
 			pygame.display.update()
 			if musica == 0:
 				pygame.mixer.init()
@@ -1219,7 +1237,7 @@ while done == False:
 			time.sleep(1)
 			
 			screen.blit (lose, (0,0))
-			window.blit(screen, (0,0))
+#			window.blit(screen, (0,0))
 			pygame.display.update()
 			if musica == 0:
 				pygame.mixer.init()
@@ -1235,7 +1253,7 @@ while done == False:
 		if loser == 0 and win > 0:
 			
 			screen.blit (winer, (0,0))
-			window.blit(screen, (0,0))
+#			window.blit(screen, (0,0))
 			pygame.display.update()
 			if musica == 0:
 				pygame.mixer.init()
@@ -1282,6 +1300,8 @@ while done == False:
 	
 	
 	
-	window.blit(screen, (0,0))
-	pygame.display.update()
+#	window.blit(screen, (0,0))
+#	pygame.display.update()
+	pygame.display.flip()
+
 pygame.quit()
